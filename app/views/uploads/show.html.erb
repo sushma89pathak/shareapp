@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+<!-- <div class="row">
+<div class="col-md-6"><span class="pull-left"></span></div>
+</div> -->
+
+<div class="container">
+  <div class="row">
+    <div class="pull-left">
+      <%= image_tag @upload.uploaded_file.url, :class=>"img-responsive"%>
+    </div>
+    <div class="pull-right">
+      <h3>Comments</h3>
+
+      <%= form_for [@upload, Comment.new] do |f| %>
+      <%= f.text_area :body, placeholder: "Add a comment" %><br/>
+      <%= f.submit "Add Comment" %>
+      <% end %>
+
+      <ul>
+        <%= render(partial: 'comments/comment', collection: @upload.comments) %>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <%= link_to 'Edit', edit_upload_path(@upload) %> |
+    <%= link_to 'Back', uploads_path %>
+  </div>
+</div>

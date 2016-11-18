@@ -1,0 +1,107 @@
+<% unless user_signed_in? %>
+<div class="jumbotron">
+  <h2>
+    Upload....Connect....Share...HAVE FUN !!
+  </h2>
+  <p>
+    This is for uploading your files, sharing them with other users registered with our site. Also, go through our questionner!
+  </p>
+  <p>
+    <%=link_to "Sign-in", user_session_path%>
+    <%=link_to "/ Sign-up", new_user_registration_path%>
+  </p>
+</div>
+<% else %>
+<div id="menu">
+  <% unless @is_this_folder_being_shared %>
+      <ul id= "top_menu">
+          <% if @current_folder %>
+              <li><%= link_to "Upload", new_sub_file_path(@current_folder) %></li>
+              <li><%= link_to "New Folder", new_sub_folder_path(@current_folder) %></li>
+          <% else %>
+              <li><%= link_to "Upload", new_upload_path %></li>
+              <li><%= link_to "New Folder", new_folder_path %></li>
+          <% end %>
+      </ul>
+  <% else %>
+      <h3>This folder is being shared to you by <%= @current_folder.user.email %></h3>
+  <% end %>
+  <br>
+  <%= render :partial => "search_label" if @uploads_label.present? %>
+</div>
+
+<%= render :partial => "breadcrumbs" %>
+<%= form_tag 'home/share/delete' do %>
+<div class="asset_list_header">
+  <div class="chk_box"> </div>
+  <div class="file_name_header">File Name</div>
+  <div class="file_size_header">Size</div>
+  <div class="file_last_updated_header">Modified</div>
+  <!-- <div class="file_last_updated_header">Delete</div> -->
+  <p><%= submit_tag "Delete" %></p>
+  <div class="file_last_updated_header">Actions</div>
+</div>
+
+<div class="asset_list">
+  <% @being_shared_folders.each do |folder| %>
+    <div class="asset_details <%= folder.shared? ? 'shared_folder' : 'folder' %>" id="folder_<%= folder.id %>">
+        <div> </div>
+        <div class="file_name"><%= link_to folder.name, browse_path(folder) %></div>
+        <div class="file_size">-</div>
+        <div class="file_last_updated">-</div>
+        <div class="actions">
+        </div>
+    </div>
+  <% end %>
+  <!-- Listing Folders -->
+
+  <% @folders.each do |folder| %>
+  <div class="asset_details <%= folder.shared? ? 'shared_folder' : 'folder' %>" id="folder_<%= folder.id %>">
+    <div class="file_name"><%= link_to folder.name, browse_path(folder) %></div>
+    <div class="file_size">-</div>
+    <div class="file_last_updated">-</div>
+    <div class="actions">
+    <div class="share">
+        <%= link_to "Share", "#", :folder_id => folder.id, :folder_name => folder.name unless @is_this_folder_being_shared%>
+    </div>
+    <div class="rename">
+        <%= link_to "Rename", url_for(:back) unless @is_this_folder_being_shared%>
+    </div>
+    <div class="delete">
+        <%= link_to "Delete", folder,:data => { :confirm => 'Are you sure to delete the folder and all of its contents?'}, :method => :delete unless @is_this_folder_being_shared%>
+    </div>
+</div>
+  </div>
+  <% end %>
+
+  <!-- Listing Files -->
+  <% @uploads.each do |asset| %>
+       <div class="asset_details file">
+        <%= check_box_tag("file_ids[]", "#{asset.id}")%>
+       <div class="file_name"><%= link_to asset.file_name, upload_path(asset) %></div>
+       <div class="file_size"><%= number_to_human_size(asset.file_size, :precision => 2) %></div>
+       <div class="file_last_updated"><%= asset.uploaded_file_updated_at %></div>
+       <div class="actions">
+           <!-- <div class="download">
+               <%= link_to "Download", download_url(asset) %>
+           </div> -->
+           <div class="delete">
+                <%= link_to "Delete", asset,:data => { :confirm => 'Are you sure?'}, :method => :delete unless @is_this_folder_being_shared%>
+           </div>
+       </div>
+   </div>
+<% end %>
+<%end%>
+
+<div id="invitation_form" title="Invite others to share" style="display:none" >
+    <%= form_tag '/home/share' do%>
+            <label for="email_addresses">Enter recipient email addresses here</label><br />
+            <%= text_field_tag 'email_addresses', ""%>
+            <br /><br />
+            <label for="message">Optional message</label><br />
+            <%= text_area_tag 'message',""%>
+            <%= hidden_field_tag "folder_id" %>
+    <% end -%>
+</div>
+</div>
+<% end %>

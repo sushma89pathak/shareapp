@@ -1,0 +1,2 @@
+ ContractMaster.reflect_on_all_associations(:belongs_to).map &(:name)
+ ContractMaster.reflect_on_all_associations(:has_many).map &(:name)

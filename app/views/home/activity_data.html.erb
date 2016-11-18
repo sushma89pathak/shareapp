@@ -1,0 +1,63 @@
+<%= "Recent Activity for last 7 days"%>
+<br>
+<% if @upload_audited_data1.present? %>
+<br>
+<% @upload_audited_data1.each do |audit| %>
+<%user = (User.find_by_id(audit.user_id)).email%>
+<%if audit.action == 'create'%>
+  <%="#{user} has created #{audit.auditable_type} with "%>
+  <% audit.audited_changes.each do |key,val| %>
+    <%= " #{key} as #{val} "%>
+    <br>
+  <% end %>
+<%elsif audit.action == 'update'%>
+<br>
+  <%="#{user} has updated #{audit.auditable_type} with "%>
+  <% audit.audited_changes.each do |key,val| %>
+    <% if val[0].blank? %>
+      <%= "#{key} changed from blank to #{val[1]}"%>
+    <%else%>
+      <%= "#{key} changed from #{val[0]} to #{val[1]}"%>
+    <%end%>
+  <% end %>
+  <br>
+<%else%>
+<br>
+  <%name_data = ((audit.auditable_type.constantize).find_by_id(audit.auditable_id.to_i)).try(:name)%>
+  <%="#{user} has deleted #{audit.auditable_type} with id = #{audit.auditable_id} and name as #{name_data}"%>
+  <br>
+<%end%>
+<% end %>
+<%end%>
+
+
+<% if @upload_audited_data2.present? %>
+<% @upload_audited_data2.each do |audit| %>
+<%user = (User.find_by_id(audit.user_id)).email%>
+<%if audit.action == 'create'%>
+<br>
+  <%="#{user} has created #{audit.auditable_type} with "%>
+  <% audit.audited_changes.each do |key,val| %>
+    <%= " #{key} as #{val} "%>
+    <br>
+  <% end %>
+
+<%elsif audit.action == 'update'%>
+<br>
+  <%="#{user} has updated #{audit.auditable_type} with "%>
+  <% audit.audited_changes.each do |key,val| %>
+    <% if val[0].blank? %>
+      <%= "#{key} changed from blank to #{val[1]}"%>
+    <%else%>
+      <%= "#{key} changed from #{val[0]} to #{val[1]}"%>
+    <%end%>
+  <% end %>
+  <br>
+<%else%>
+<br>
+  <%name_data = ((audit.auditable_type.constantize).find_by_id(audit.auditable_id.to_i)).try(:name)%>
+  <%="#{user} has deleted #{audit.auditable_type} with id = #{audit.auditable_id} and name as #{name_data}"%>
+  <br>
+<%end%>
+<% end %>
+<%end%>

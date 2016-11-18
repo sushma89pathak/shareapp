@@ -1,0 +1,15 @@
+<div>
+  <br>
+  <%=label_tag 'Label Search'%>
+  <br>
+  <%= form_tag 'home/label_search' do%>
+    <% @uploads_label.each do |label| %>
+      <% if !label.nil? %>
+        <%= check_box_tag "label_names[]", "#{label}" %>
+        <%= label_tag "#{label}"%>
+      <%end%>
+    <% end %>
+    <%= submit_tag 'Search'%>
+  <% end%>
+</div>
+<br>

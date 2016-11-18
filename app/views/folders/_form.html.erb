@@ -1,0 +1,36 @@
+<%= form_for(@folder) do |f| %>
+  <% if @folder.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@folder.errors.count, "error") %> prohibited this folder from being saved:</h2>
+
+      <ul>
+      <% @folder.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </p>
+
+  <p>
+    <%= f.hidden_field :parent_id %>
+  </p>
+
+  <!-- <div class="field">
+    <%= f.label :user_id %>
+    <%= f.number_field :user_id %>
+  </div>  -->
+
+  <p>
+    <% if @folder.new_record? %>
+      <%= f.submit "Create Folder" %>
+    <% else %>
+      <%= f.submit "Rename Folder" %>
+    <% end %>
+  </p>
+
+<% end %>

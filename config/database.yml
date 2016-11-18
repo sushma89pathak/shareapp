@@ -1,0 +1,9 @@
+development:
+  username: postgres
+  database: sharebox
+  password: root
+  encoding: UTF8
+  adapter:  postgresql
+  timeout:  500
+  host:     localhost
+  pool:     5
